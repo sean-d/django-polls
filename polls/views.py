@@ -1,19 +1,22 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
+from django.views import generic
 from .models import Choice, Question
 
 
-def index(request):
-    five_most_recent = Question.objects.order_by("-pub_date")[:5]
-    five_most_recent = five_most_recent[::-1]
-    context_dict = {"five_most_recent": five_most_recent}
-    return render(request, "polls/index.html", context=context_dict)
+class IndexView(generic.ListView):
+    template_name = "polls/index.html"
+    context_object_name = "five_most_recent"
+
+    def get_queryset(self):
+        thing = Question.objects.order_by("-pub_date")[:5]
+        return thing[::-1]
 
 
-def detail(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, "polls/detail.html", {"question": question})
+class DetailsView(generic.DetailView):
+    model = Question
+    template_name = "polls/details.html"
 
 
 def vote(request, question_id):
@@ -23,7 +26,7 @@ def vote(request, question_id):
     except (KeyError, Choice.DoesNotExist):
         return render(
             request,
-            "polls/detail.html",
+            "polls/details.html",
             {"question": question, "error_message": "You did not make a choice."},
         )
     else:
@@ -32,6 +35,6 @@ def vote(request, question_id):
     return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
 
 
-def results(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, "polls/results.html", {"question": question})
+class ResultsView(generic.DetailView):
+    model = Question
+    template_name = "polls/results.html"

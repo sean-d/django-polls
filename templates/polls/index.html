@@ -5,7 +5,7 @@
 {% if five_most_recent %}
     <ul>
         {% for q in five_most_recent %}
-            <li><a href="{% url 'polls:detail' q.id %}">{{q.question_text}}</a></li>
+            <li><a href="{% url 'polls:details' q.id %}">{{q.question_text}}</a></li>
         {% endfor %}
     </ul>
 
