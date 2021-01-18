@@ -1,6 +1,10 @@
 <!DOCTYPE HTML>
+{% load static %}
 <html>
-<head><title>poll index page</title></head>
+<head>
+    <title>poll index page</title>
+    <link rel="stylesheet" type="text/css" href="{%static 'polls/style.css'%}">
+</head>
 <body>
 {% if five_most_recent %}
     <ul>
